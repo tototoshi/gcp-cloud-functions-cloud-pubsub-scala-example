@@ -1,0 +1,98 @@
+* gcp-cloud-functions-cloud-pubsub-scala-example
+
+  This is an example of how to use GCP's Cloud Functions with Scala.
+  It uses Cloud Pub/Sub as a trigger.
+
+  A message is sent to Cloud Pub/Sub.
+  The message is then sent back by triggered Cloud Functions.
+
+  #+BEGIN_SRC plantuml :file sequence.png
+    skinparam monochrome true
+    skinparam shadowing false
+
+    Client -> PubSub: message
+    PubSub -> Function: message
+    Function -> PubSub: message(reply)
+    PubSub -> Client: message(reply)
+  #+END_SRC
+
+  #+RESULTS:
+  [[file:sequence.png]]
+
+
+** How to run
+
+   Set the configuration value to an environment variable.
+   What would be a good way to share settings between a Scala program and terraform?
+
+   #+BEGIN_SRC shell-script
+     export GCP_CREADENTIALS_FILE=<your-credentials.json>
+     export GCP_PROJECT_ID=<your-project-id>
+     export GCP_CLOUD_PUBSUB_TOPIC_NAME_REQUEST="topic-scala-hello-request"
+     export GCP_CLOUD_PUBSUB_TOPIC_NAME_RESPONSE="topic-scala-hello-response"
+     export GCP_CLOUD_PUBSUB_SUBSCRIPTION_NAME_RESPONSE="subscription-scala-hello-response"
+
+     export TF_VAR_credentials_file=$GCP_CREADENTIALS_FILE
+     export TF_VAR_project=$GCP_PROJECT_ID
+     export TF_VAR_topic_name_request=$GCP_CLOUD_PUBSUB_TOPIC_NAME_REQUEST
+     export TF_VAR_topic_name_response=$GCP_CLOUD_PUBSUB_TOPIC_NAME_RESPONSE
+     export TF_VAR_subscription_name_response=$GCP_CLOUD_PUBSUB_SUBSCRIPTION_NAME_RESPONSE
+
+   #+END_SRC
+
+   #+BEGIN_SRC shell-script
+     make deploy
+     make run
+   #+END_SRC
+
+   Output:
+
+   #+BEGIN_SRC text
+     2021/04/23 21:06:13.975 [run-main-0] INFO  com.example.client.Client$ - Started Subscriber
+     2021/04/23 21:06:14.899 [run-main-0] INFO  com.example.client.Client$ - Published: messageId=2308396178508829, data=Hello[timestamp=2021-04-23T21:06:13.980+09:00[Asia/Tokyo]]
+     2021/04/23 21:06:14.903 [run-main-0] INFO  com.example.client.Client$ - Waiting...
+     2021/04/23 21:06:15.908 [run-main-0] INFO  com.example.client.Client$ - Waiting...
+     2021/04/23 21:06:16.908 [run-main-0] INFO  com.example.client.Client$ - Waiting...
+     2021/04/23 21:06:17.912 [run-main-0] INFO  com.example.client.Client$ - Waiting...
+     2021/04/23 21:06:18.916 [run-main-0] INFO  com.example.client.Client$ - Waiting...
+     2021/04/23 21:06:19.920 [run-main-0] INFO  com.example.client.Client$ - Waiting...
+     2021/04/23 21:06:20.924 [run-main-0] INFO  com.example.client.Client$ - Waiting...
+     2021/04/23 21:06:21.924 [run-main-0] INFO  com.example.client.Client$ - Waiting...
+     2021/04/23 21:06:22.929 [run-main-0] INFO  com.example.client.Client$ - Waiting...
+     2021/04/23 21:06:23.295 [Gax-9] INFO  com.example.client.Client$ - Id: 2309271596252358
+     2021/04/23 21:06:23.296 [Gax-9] INFO  com.example.client.Client$ - Data: Hello[timestamp=2021-04-23T21:06:13.980+09:00[Asia/Tokyo]]
+   #+END_SRC
+
+   Don't forget to clean up after the execution.
+
+   #+BEGIN_SRC shell-script
+     make destroy
+   #+END_SRC
+
+
+   "cold start" seems to be slow when using Cloud Functions in Scala. A simple "Hello World" took about 2 seconds. After that, it was fast.
+
+   If the cold start is slow, it will affect the cost as well as the latency of the application. One solution is to use GraalVM, but I haven't tried yet.
+
+   My teammate said that GCP doesn't update its runtime frequently and it's painful. However, Scala doesn't require the latest version of Java, so I don't think it will be much of a problem.
+
+** Reference
+
+   - Terraform Official documentation
+     https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloudfunctions_function
+
+   - About packaging and deployment
+     https://qiita.com/nii_yan/items/c03871ec252b12fb238d
+     https://xuwei-k.hatenablog.com/entry/2021/04/05/162349
+
+   - GCP Official documentation
+     About Java runtime
+     https://cloud.google.com/functions/docs/concepts/exec?hl=ja
+     Tutorial for Java
+     https://cloud.google.com/functions/docs/first-java
+     Pub/Sub Triggers
+     https://cloud.google.com/functions/docs/calling/pubsub
+     Java Deployment Options
+     https://cloud.google.com/functions/docs/concepts/java-deploy
+     Receiving messages using Pull (Cloud Pub/Sub)
+     https://cloud.google.com/pubsub/docs/pull

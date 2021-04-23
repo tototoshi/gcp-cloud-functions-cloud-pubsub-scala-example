@@ -1,0 +1,4 @@
+metals.sbt
+dist/
+.bsp/
+target/
