@@ -15,7 +15,6 @@ class Hello extends BackgroundFunction[Message] {
 
   private val logger = LoggerFactory.getLogger(classOf[Hello])
 
-  // TODO terraformで環境変数をセットする
   private val projectId = sys.env("GCP_PROJECT_ID")
 
   private val topicName = sys.env("GCP_CLOUD_PUBSUB_TOPIC_NAME_RESPONSE")
