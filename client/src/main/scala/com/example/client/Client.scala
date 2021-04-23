@@ -39,9 +39,9 @@ object Client {
     val credentialsProvider = FixedCredentialsProvider.create(credentials)
 
     val receiver: MessageReceiver = (message: PubsubMessage, consumer: AckReplyConsumer) => {
-      logger.info("Id: " + message.getMessageId());
-      logger.info("Data: " + message.getData().toStringUtf8());
-      consumer.ack();
+      logger.info("Id: " + message.getMessageId())
+      logger.info("Data: " + message.getData().toStringUtf8())
+      consumer.ack()
       replyReceived = true
     }
 
