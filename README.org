@@ -16,7 +16,6 @@
     PubSub -> Client: message(reply)
   #+END_SRC
 
-  #+RESULTS:
   [[file:sequence.png]]
 
 
@@ -88,11 +87,15 @@
    - GCP Official documentation
      About Java runtime
      https://cloud.google.com/functions/docs/concepts/exec?hl=ja
+
      Tutorial for Java
      https://cloud.google.com/functions/docs/first-java
+
      Pub/Sub Triggers
      https://cloud.google.com/functions/docs/calling/pubsub
+
      Java Deployment Options
      https://cloud.google.com/functions/docs/concepts/java-deploy
+
      Receiving messages using Pull (Cloud Pub/Sub)
      https://cloud.google.com/pubsub/docs/pull
