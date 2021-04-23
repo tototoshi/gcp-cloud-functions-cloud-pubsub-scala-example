@@ -22,7 +22,7 @@
 ** How to run
 
    Set the configuration value to an environment variable.
-   What would be a good way to share settings between a Scala program and terraform?
+   (What would be a good way to share settings between a Scala program and terraform?)
 
    #+BEGIN_SRC shell-script
      export GCP_CREADENTIALS_FILE=<your-credentials.json>
